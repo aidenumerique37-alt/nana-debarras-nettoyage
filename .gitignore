@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Node (si serveur local)
+node_modules/
+npm-debug.log*
+
+# Éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environnements
+.env
+.env.local
+
+# Claude Code
+.claude/
