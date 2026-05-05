@@ -71,6 +71,7 @@ const PageJumper = ({ route }) => {
 };
 
 const Router = () => {
+  const [content, setContent] = React.useState({ ...DEFAULT_SITE_CONTENT });
   const route = useHashRoute('home');
 
   const page = (() => {
@@ -110,7 +111,12 @@ const Router = () => {
     }
   })();
 
-  return <>{page}<PageJumper route={route} /></>;
+  return (
+    <SiteContentContext.Provider value={{ content, setContent }}>
+      {page}
+      <PageJumper route={route} />
+    </SiteContentContext.Provider>
+  );
 };
 
 ReactDOM.createRoot(document.getElementById('root')).render(<Router />);

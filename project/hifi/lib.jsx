@@ -126,4 +126,34 @@ const useHashRoute = (def = 'home') => {
   return route;
 };
 
-Object.assign(window, { Icon, Wordmark, navigate, useHashRoute, DropMenu });
+// Shared editable site content — defaults match the public pages
+const DEFAULT_SITE_CONTENT = {
+  // Hero
+  hero_titre1:   "On libère les espaces,",
+  hero_titre2:   "avec respect.",
+  hero_accroche: "Nana intervient pour les débarras de succession, les logements encombrés et les nettoyages spécialisés — avec professionnalisme, discrétion et un vrai engagement pour la valorisation des biens.",
+  hero_pill:     "Marais Poitevin (79) · Discrétion & engagement écologique",
+  // Metas hero
+  meta1_titre: "Visite sous 48h",  meta1_sous: "gratuite, sans engagement",
+  meta2_titre: "Devis sous 24h",   meta2_sous: "après la visite",
+  meta3_titre: "Tri écologique",   meta3_sous: "don + recyclage",
+  // Stats strip
+  stat1_val: "10 ans", stat1_lbl: "d'expérience locale",
+  stat2_val: "800+",   stat2_lbl: "interventions réalisées",
+  stat3_val: "4,9/5",  stat3_lbl: "satisfaction clients",
+  stat4_val: "100 %",  stat4_lbl: "tri sélectif & valorisation",
+  // Témoignage
+  temoignage:      "« Après le décès de mon père, je ne savais pas par où commencer. Nana a tout géré avec une délicatesse qui m'a vraiment touché. Ils ont même coordonné avec le notaire. »",
+  temoignage_attr: "— Frédéric L., Niort · débarras de succession, 2025",
+  temoignage_note: "4,9/5 · avis vérifiés",
+  // CTA final
+  cta_titre: "On commence par écouter.",
+  cta_sous:  "Décrivez votre situation. Visite gratuite sous 48h, devis sur-mesure sous 24h, intervention planifiée selon votre calendrier.",
+};
+
+const SiteContentContext = React.createContext({
+  content:    DEFAULT_SITE_CONTENT,
+  setContent: () => {},
+});
+
+Object.assign(window, { Icon, Wordmark, navigate, useHashRoute, DropMenu, SiteContentContext, DEFAULT_SITE_CONTENT });

@@ -42,6 +42,7 @@ const SaveBanner = ({ show }) => !show ? null : (
 );
 
 const PageSettings = () => {
+  const { content, setContent } = React.useContext(SiteContentContext);
   const [tab,      setTab]      = React.useState('entreprise');
   const [saved,    setSaved]    = React.useState(false);
   const [services, setServices] = React.useState(INITIAL_SERVICES.map(s => ({ ...s })));
@@ -76,7 +77,12 @@ const PageSettings = () => {
     if (newZone.trim()) { setZones(z => [...z, newZone.trim()]); setNewZone(''); }
   };
 
+  const [localContent, setLocalContent] = React.useState({ ...content });
+  const updateC = (k, v) => setLocalContent(l => ({ ...l, [k]: v }));
+  const saveContent = () => { setContent({ ...localContent }); save(); };
+
   const TABS = [
+    { id: 'contenu',     label: 'Contenu du site'  },
     { id: 'entreprise',  label: 'Mon entreprise'   },
     { id: 'prestations', label: 'Mes prestations'  },
     { id: 'zone',        label: 'Zone & horaires'  },
@@ -106,6 +112,121 @@ const PageSettings = () => {
               <button key={t.id} onClick={() => setTab(t.id)} style={tabStyle(t.id)}>{t.label}</button>
             ))}
           </div>
+
+          {/* ── CONTENU DU SITE ── */}
+          {tab === 'contenu' && (
+            <div style={{ maxWidth: 720 }}>
+              <p className="muted" style={{ marginBottom: 28, fontSize: 14, lineHeight: 1.6 }}>
+                Modifiez le contenu visible sur votre site public. Les changements sont appliqués immédiatement sur toutes les pages.
+              </p>
+
+              {/* Hero */}
+              <div className="card" style={{ marginBottom: 20 }}>
+                <h3 style={{ fontSize: 15, marginBottom: 16 }}>Hero — accroche principale</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                  <div className="field">
+                    <label>Titre ligne 1</label>
+                    <input className="input" value={localContent.hero_titre1} onChange={e => updateC('hero_titre1', e.target.value)} />
+                  </div>
+                  <div className="field">
+                    <label>Titre ligne 2 <span style={{ color: 'var(--primary)', fontWeight: 400 }}>(texte accentué)</span></label>
+                    <input className="input" value={localContent.hero_titre2} onChange={e => updateC('hero_titre2', e.target.value)} />
+                  </div>
+                  <div className="field">
+                    <label>Texte d'accroche</label>
+                    <textarea className="textarea" rows={3} value={localContent.hero_accroche} onChange={e => updateC('hero_accroche', e.target.value)} />
+                  </div>
+                  <div className="field">
+                    <label>Badge / pill</label>
+                    <input className="input" value={localContent.hero_pill} onChange={e => updateC('hero_pill', e.target.value)} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Metas hero */}
+              <div className="card" style={{ marginBottom: 20 }}>
+                <h3 style={{ fontSize: 15, marginBottom: 16 }}>3 engagements sous le CTA</h3>
+                {[
+                  ['meta1_titre', 'meta1_sous', 'Engagement 1'],
+                  ['meta2_titre', 'meta2_sous', 'Engagement 2'],
+                  ['meta3_titre', 'meta3_sous', 'Engagement 3'],
+                ].map(([kt, ks, label]) => (
+                  <div key={kt} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+                    <div className="field">
+                      <label>{label} — titre</label>
+                      <input className="input" value={localContent[kt]} onChange={e => updateC(kt, e.target.value)} />
+                    </div>
+                    <div className="field">
+                      <label>{label} — sous-titre</label>
+                      <input className="input" value={localContent[ks]} onChange={e => updateC(ks, e.target.value)} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Stats */}
+              <div className="card" style={{ marginBottom: 20 }}>
+                <h3 style={{ fontSize: 15, marginBottom: 16 }}>Chiffres clés</h3>
+                {[
+                  ['stat1_val', 'stat1_lbl', 'Expérience'],
+                  ['stat2_val', 'stat2_lbl', 'Interventions'],
+                  ['stat3_val', 'stat3_lbl', 'Satisfaction clients'],
+                  ['stat4_val', 'stat4_lbl', 'Engagement'],
+                ].map(([kv, kl, label]) => (
+                  <div key={kv} style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: 12, marginBottom: 12, alignItems: 'end' }}>
+                    <div className="field">
+                      <label>{label} — chiffre</label>
+                      <input className="input" value={localContent[kv]} onChange={e => updateC(kv, e.target.value)} style={{ fontWeight: 700, fontSize: 16 }} />
+                    </div>
+                    <div className="field">
+                      <label>Libellé</label>
+                      <input className="input" value={localContent[kl]} onChange={e => updateC(kl, e.target.value)} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Témoignage */}
+              <div className="card" style={{ marginBottom: 20 }}>
+                <h3 style={{ fontSize: 15, marginBottom: 16 }}>Témoignage client</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                  <div className="field">
+                    <label>Citation</label>
+                    <textarea className="textarea" rows={3} value={localContent.temoignage} onChange={e => updateC('temoignage', e.target.value)} />
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 160px', gap: 12 }}>
+                    <div className="field">
+                      <label>Attribution (nom, lieu, date)</label>
+                      <input className="input" value={localContent.temoignage_attr} onChange={e => updateC('temoignage_attr', e.target.value)} />
+                    </div>
+                    <div className="field">
+                      <label>Note affichée</label>
+                      <input className="input" value={localContent.temoignage_note} onChange={e => updateC('temoignage_note', e.target.value)} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA final */}
+              <div className="card" style={{ marginBottom: 28 }}>
+                <h3 style={{ fontSize: 15, marginBottom: 16 }}>Section CTA finale</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                  <div className="field">
+                    <label>Titre</label>
+                    <input className="input" value={localContent.cta_titre} onChange={e => updateC('cta_titre', e.target.value)} />
+                  </div>
+                  <div className="field">
+                    <label>Sous-titre</label>
+                    <textarea className="textarea" rows={2} value={localContent.cta_sous} onChange={e => updateC('cta_sous', e.target.value)} />
+                  </div>
+                </div>
+              </div>
+
+              <button className="btn btn-primary" onClick={saveContent} style={{ padding: '10px 24px' }}>
+                Appliquer sur le site
+              </button>
+            </div>
+          )}
 
           {/* ── MON ENTREPRISE ── */}
           {tab === 'entreprise' && (

@@ -9,7 +9,9 @@ const HOME_SERVICES = [
   { id: 'pro',          n: '06', title: 'Prestations professionnelles',   desc: 'Notaires, agences immobilières, bailleurs sociaux : devis sous 24h et rapport de valorisation inclus.' },
 ];
 
-const PageHome = () => (
+const PageHome = () => {
+  const { content: c } = React.useContext(SiteContentContext);
+  return (
   <div className="page">
     <SiteNav active="home" />
 
@@ -18,15 +20,13 @@ const PageHome = () => (
       <div className="hero">
         <div>
           <span className="pill pill-violet" style={{ marginBottom: 24 }}>
-            <Icon name="pin" size={14} /> Marais Poitevin (79) · Discrétion & engagement écologique
+            <Icon name="pin" size={14} /> {c.hero_pill}
           </span>
           <h1>
-            On libère les espaces,<br />
-            <span className="accent">avec respect.</span>
+            {c.hero_titre1}<br />
+            <span className="accent">{c.hero_titre2}</span>
           </h1>
-          <p className="lead">
-            Nana intervient pour les débarras de succession, les logements encombrés et les nettoyages spécialisés — avec professionnalisme, discrétion et un vrai engagement pour la valorisation des biens.
-          </p>
+          <p className="lead">{c.hero_accroche}</p>
           <div className="hero-actions">
             <button className="btn btn-primary" onClick={() => navigate('devis')}>
               Demander un devis gratuit
@@ -37,11 +37,11 @@ const PageHome = () => (
             </button>
           </div>
           <div className="hero-meta">
-            <div><strong>Visite sous 48h</strong><br /><span style={{ fontSize: 12 }}>gratuite, sans engagement</span></div>
+            <div><strong>{c.meta1_titre}</strong><br /><span style={{ fontSize: 12 }}>{c.meta1_sous}</span></div>
             <div style={{ width: 1, height: 32, background: 'var(--border-strong)' }} />
-            <div><strong>Devis sous 24h</strong><br /><span style={{ fontSize: 12 }}>après la visite</span></div>
+            <div><strong>{c.meta2_titre}</strong><br /><span style={{ fontSize: 12 }}>{c.meta2_sous}</span></div>
             <div style={{ width: 1, height: 32, background: 'var(--border-strong)' }} />
-            <div><strong>Tri écologique</strong><br /><span style={{ fontSize: 12 }}>don + recyclage</span></div>
+            <div><strong>{c.meta3_titre}</strong><br /><span style={{ fontSize: 12 }}>{c.meta3_sous}</span></div>
           </div>
         </div>
         <div>
@@ -51,10 +51,10 @@ const PageHome = () => (
 
       {/* Stats strip */}
       <div className="stats">
-        <div className="stat"><div className="num">10 ans</div><div className="lbl">d'expérience locale</div></div>
-        <div className="stat"><div className="num">800+</div><div className="lbl">interventions réalisées</div></div>
-        <div className="stat"><div className="num">4,9/5</div><div className="lbl">satisfaction clients</div></div>
-        <div className="stat"><div className="num">100 %</div><div className="lbl">tri sélectif & valorisation</div></div>
+        <div className="stat"><div className="num">{c.stat1_val}</div><div className="lbl">{c.stat1_lbl}</div></div>
+        <div className="stat"><div className="num">{c.stat2_val}</div><div className="lbl">{c.stat2_lbl}</div></div>
+        <div className="stat"><div className="num">{c.stat3_val}</div><div className="lbl">{c.stat3_lbl}</div></div>
+        <div className="stat"><div className="num">{c.stat4_val}</div><div className="lbl">{c.stat4_lbl}</div></div>
       </div>
     </section>
 
@@ -139,13 +139,11 @@ const PageHome = () => (
       <div className="container testimonial-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
         <div>
           <span className="eyebrow">Témoignages</span>
-          <p className="quote" style={{ marginTop: 24 }}>
-            « Après le décès de mon père, je ne savais pas par où commencer. Nana a tout géré avec une délicatesse qui m'a vraiment touché. Ils ont même coordonné avec le notaire. »
-          </p>
-          <p className="quote-attr">— Frédéric L., Vincennes · débarras de succession, 2025</p>
+          <p className="quote" style={{ marginTop: 24 }}>{c.temoignage}</p>
+          <p className="quote-attr">{c.temoignage_attr}</p>
           <div style={{ display: 'flex', gap: 4, marginTop: 20, color: 'var(--warning)' }}>
             {[...Array(5)].map((_, i) => <Icon key={i} name="star" size={20} stroke={0} color="var(--warning)" />)}
-            <span style={{ color: 'var(--text-muted)', fontSize: 13, marginLeft: 8 }}>4,9/5 · avis vérifiés</span>
+            <span style={{ color: 'var(--text-muted)', fontSize: 13, marginLeft: 8 }}>{c.temoignage_note}</span>
           </div>
           <button className="btn btn-ghost" onClick={() => navigate('about')} style={{ marginTop: 24 }}>
             En savoir plus sur Nana
@@ -217,12 +215,8 @@ const PageHome = () => (
     {/* CTA final */}
     <section className="container section-tight">
       <div style={{ textAlign: 'center', padding: '40px 0' }}>
-        <h2 style={{ maxWidth: 720, margin: '0 auto 16px' }}>
-          On commence par <span className="serif-italic" style={{ color: 'var(--primary)' }}>écouter</span>.
-        </h2>
-        <p className="muted" style={{ maxWidth: 540, margin: '0 auto 32px', fontSize: 17 }}>
-          Décrivez votre situation. Visite gratuite sous 48h, devis sur-mesure sous 24h, intervention planifiée selon votre calendrier.
-        </p>
+        <h2 style={{ maxWidth: 720, margin: '0 auto 16px' }}>{c.cta_titre}</h2>
+        <p className="muted" style={{ maxWidth: 540, margin: '0 auto 32px', fontSize: 17 }}>{c.cta_sous}</p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <button className="btn btn-primary" onClick={() => navigate('devis')} style={{ padding: '14px 32px', fontSize: 16 }}>
             Demander un devis gratuit
@@ -237,6 +231,7 @@ const PageHome = () => (
 
     <SiteFooter />
   </div>
-);
+  );
+};
 
 window.PageHome = PageHome;
