@@ -6,7 +6,8 @@ const AdminSidebar = ({ active = 'dashboard' }) => {
     { id: 'inbox',     label: 'Demandes',         icon: 'inbox',   badge: 3 },
     { id: 'planning',  label: 'Planning',          icon: 'calendar' },
     { id: 'missions',  label: 'Missions',          icon: 'folder'  },
-    { id: 'clients',   label: 'Clients',           icon: 'user'    },
+    { id: 'clients',     label: 'Clients',      icon: 'user'    },
+    { id: 'mediatheque', label: 'Médiathèque',  icon: 'camera'  },
   ];
   const items2 = [
     { id: 'reports',   label: 'Statistiques', icon: 'chart'    },

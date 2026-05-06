@@ -1,6 +1,6 @@
 // router.jsx — hash-based router
 
-const ADMIN_ROUTES = new Set(['dashboard', 'inbox', 'mission', 'missions', 'planning', 'clients', 'reports', 'settings']);
+const ADMIN_ROUTES = new Set(['dashboard', 'inbox', 'mission', 'missions', 'planning', 'clients', 'mediatheque', 'reports', 'settings']);
 
 const PageJumper = ({ route }) => {
   const [open, setOpen] = React.useState(false);
@@ -17,6 +17,7 @@ const PageJumper = ({ route }) => {
     { id: 'mission',               label: 'Mission · Détail',        group: 'Admin' },
     { id: 'planning',              label: 'Planning',                group: 'Admin' },
     { id: 'clients',               label: 'Clients',                 group: 'Admin' },
+    { id: 'mediatheque',           label: 'Médiathèque',             group: 'Admin' },
     { id: 'reports',               label: 'Statistiques',            group: 'Admin' },
     { id: 'settings',              label: 'Paramètres',              group: 'Admin' },
   ];
@@ -95,8 +96,9 @@ const Router = () => {
       case 'mission':   return <PageMission />;
       case 'planning':  return <PagePlanning />;
       case 'missions':  return <PageMissions />;
-      case 'clients':   return <PageClients />;
-      case 'reports':   return <PageStats />;
+      case 'clients':      return <PageClients />;
+      case 'mediatheque':  return <PageMediatheque />;
+      case 'reports':      return <PageStats />;
       case 'settings':  return <PageSettings />;
       default:
         return (
