@@ -46,6 +46,10 @@ const Icon = ({ name, size = 20, stroke = 1.6, color = 'currentColor' }) => {
     quote: <path d="M3 20V11a5 5 0 015-5h0a5 5 0 015 5v0a5 5 0 01-5 5H5l-2 4zM14 20V11a5 5 0 015-5h0a5 5 0 015 5v0a5 5 0 01-5 5h-3l-2 4z" />,
     tools: <><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" /></>,
     building: <><path d="M3 21h18" /><rect x="5" y="3" width="14" height="18" rx="2" /><path d="M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1" /></>,
+    eye:      <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></>,
+    eyeOff:   <path d="M17.9 17.9A11 11 0 0112 20c-7 0-11-8-11-8a18 18 0 015.1-5.9M9.9 4.2A9 9 0 0112 4c7 0 11 8 11 8a18 18 0 01-2.1 3.1m-6.4-6.4a3 3 0 014.2 4.2M3 3l18 18" />,
+    grid:     <><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></>,
+    image:    <><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="M21 15l-5-5L5 21" /></>,
   };
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
@@ -156,4 +160,68 @@ const SiteContentContext = React.createContext({
   setContent: () => {},
 });
 
-Object.assign(window, { Icon, Wordmark, navigate, useHashRoute, DropMenu, SiteContentContext, DEFAULT_SITE_CONTENT });
+// Gallery shared state
+const DEFAULT_GALLERY = [];
+
+const GalleryContext = React.createContext({
+  gallery:    DEFAULT_GALLERY,
+  setGallery: () => {},
+});
+
+// Extract YouTube video ID from various URL formats
+const getYouTubeId = (url) => {
+  if (!url) return null;
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([^&?/\s]{11})/);
+  return m ? m[1] : null;
+};
+
+// Interactive before/after drag slider
+const DuoSlider = ({ before, after, height = '100%' }) => {
+  const [pos, setPos] = React.useState(50);
+  const ref = React.useRef(null);
+  const dragging = React.useRef(false);
+
+  const calcPos = (clientX) => {
+    const rect = ref.current.getBoundingClientRect();
+    return Math.max(2, Math.min(98, ((clientX - rect.left) / rect.width) * 100));
+  };
+
+  React.useEffect(() => {
+    const up = () => { dragging.current = false; };
+    window.addEventListener('mouseup', up);
+    window.addEventListener('touchend', up);
+    return () => { window.removeEventListener('mouseup', up); window.removeEventListener('touchend', up); };
+  }, []);
+
+  return (
+    <div ref={ref}
+      style={{ position: 'relative', overflow: 'hidden', cursor: 'col-resize', userSelect: 'none', height, borderRadius: 'var(--r-lg)' }}
+      onMouseDown={() => { dragging.current = true; }}
+      onMouseMove={e => { if (dragging.current) setPos(calcPos(e.clientX)); }}
+      onTouchStart={() => { dragging.current = true; }}
+      onTouchMove={e => { if (dragging.current) setPos(calcPos(e.touches[0].clientX)); }}
+    >
+      <img src={after} draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+        onError={e => { e.target.style.opacity = 0; }} />
+      <div style={{ position: 'absolute', inset: 0, clipPath: `inset(0 ${100 - pos}% 0 0)`, pointerEvents: 'none' }}>
+        <img src={before} draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          onError={e => { e.target.style.opacity = 0; }} />
+      </div>
+      <div style={{ position: 'absolute', top: 12, left: 12, fontSize: 10, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase',
+        background: 'rgba(0,0,0,.56)', color: '#fff', padding: '3px 9px', borderRadius: 4, pointerEvents: 'none' }}>Avant</div>
+      <div style={{ position: 'absolute', top: 12, right: 12, fontSize: 10, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase',
+        background: 'rgba(0,0,0,.56)', color: '#fff', padding: '3px 9px', borderRadius: 4, pointerEvents: 'none' }}>Après</div>
+      <div style={{ position: 'absolute', top: 0, bottom: 0, left: `${pos}%`, width: 2, background: 'white',
+        transform: 'translateX(-50%)', boxShadow: '0 0 10px rgba(0,0,0,.3)', pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
+          width: 36, height: 36, borderRadius: '50%', background: 'white', boxShadow: '0 2px 8px rgba(0,0,0,.25)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+          <div style={{ transform: 'rotate(180deg)', lineHeight: 0 }}><Icon name="chevron" size={12} color="var(--text-muted)" /></div>
+          <Icon name="chevron" size={12} color="var(--text-muted)" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+Object.assign(window, { Icon, Wordmark, navigate, useHashRoute, DropMenu, SiteContentContext, DEFAULT_SITE_CONTENT, GalleryContext, DEFAULT_GALLERY, getYouTubeId, DuoSlider });

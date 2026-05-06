@@ -1,6 +1,6 @@
 // router.jsx — hash-based router
 
-const ADMIN_ROUTES = new Set(['dashboard', 'inbox', 'mission', 'missions', 'planning', 'clients', 'mediatheque', 'reports', 'settings']);
+const ADMIN_ROUTES = new Set(['dashboard', 'inbox', 'mission', 'missions', 'planning', 'clients', 'mediatheque', 'galerie', 'reports', 'settings']);
 
 const PageJumper = ({ route }) => {
   const [open, setOpen] = React.useState(false);
@@ -18,6 +18,7 @@ const PageJumper = ({ route }) => {
     { id: 'planning',              label: 'Planning',                group: 'Admin' },
     { id: 'clients',               label: 'Clients',                 group: 'Admin' },
     { id: 'mediatheque',           label: 'Médiathèque',             group: 'Admin' },
+    { id: 'galerie',               label: 'Galerie',                 group: 'Admin' },
     { id: 'reports',               label: 'Statistiques',            group: 'Admin' },
     { id: 'settings',              label: 'Paramètres',              group: 'Admin' },
   ];
@@ -72,7 +73,8 @@ const PageJumper = ({ route }) => {
 };
 
 const Router = () => {
-  const [content, setContent] = React.useState({ ...DEFAULT_SITE_CONTENT });
+  const [content,  setContent]  = React.useState({ ...DEFAULT_SITE_CONTENT });
+  const [gallery,  setGallery]  = React.useState([...DEFAULT_GALLERY]);
   const route = useHashRoute('home');
 
   const page = (() => {
@@ -98,6 +100,7 @@ const Router = () => {
       case 'missions':  return <PageMissions />;
       case 'clients':      return <PageClients />;
       case 'mediatheque':  return <PageMediatheque />;
+      case 'galerie':      return <PageGalerie />;
       case 'reports':      return <PageStats />;
       case 'settings':  return <PageSettings />;
       default:
@@ -115,8 +118,10 @@ const Router = () => {
 
   return (
     <SiteContentContext.Provider value={{ content, setContent }}>
-      {page}
-      <PageJumper route={route} />
+      <GalleryContext.Provider value={{ gallery, setGallery }}>
+        {page}
+        <PageJumper route={route} />
+      </GalleryContext.Provider>
     </SiteContentContext.Provider>
   );
 };

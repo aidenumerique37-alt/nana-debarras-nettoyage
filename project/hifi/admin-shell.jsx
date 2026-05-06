@@ -8,6 +8,7 @@ const AdminSidebar = ({ active = 'dashboard' }) => {
     { id: 'missions',  label: 'Missions',          icon: 'folder'  },
     { id: 'clients',     label: 'Clients',      icon: 'user'    },
     { id: 'mediatheque', label: 'Médiathèque',  icon: 'camera'  },
+    { id: 'galerie',     label: 'Galerie',       icon: 'grid'    },
   ];
   const items2 = [
     { id: 'reports',   label: 'Statistiques', icon: 'chart'    },
